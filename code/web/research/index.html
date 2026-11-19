@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Nexus Research</title>
+    <link rel="stylesheet" href="/shared/theme.css" />
+    <link rel="stylesheet" href="/research/style.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/">Nexus Research</a>
+    </header>
+    <main>
+      <section id="workspace" aria-label="Research workspace">
+        <div class="intro">
+          <h1>Research</h1>
+          <span>Open source · Saved to your folder</span>
+        </div>
+        <form id="runForm">
+          <section class="form-row">
+            <h2>Targets</h2>
+            <div>
+              <label for="target">Chemical structure, SMILES</label>
+              <div class="target-entry">
+                <textarea
+                  id="target"
+                  rows="2"
+                  spellcheck="false"
+                  placeholder="Paste a target structure"
+                ></textarea
+                ><button id="addTarget" type="button">Add target</button>
+              </div>
+              <p class="hint">
+                Any supported connected structure, 2–65 heavy atoms. Add up to 12 targets. Names and
+                CAS numbers are not resolved.
+              </p>
+              <p class="hint" id="pathwaySummary">
+                Previously discovered pathways are checked against your local history.
+              </p>
+              <ul id="targets" class="target-list" aria-label="Selected targets"></ul>
+              <details class="examples-details">
+                <summary>Example structures</summary>
+                <div class="actions">
+                  <button type="button" data-example="CC(=O)Oc1ccccc1C(=O)O">Aspirin</button
+                  ><button type="button" data-example="CC(C)OC(=O)c1ccccc1">
+                    Isopropyl benzoate
+                  </button>
+                </div>
+              </details>
+            </div>
+          </section>
+
+          <section class="form-row">
+            <h2>Connection</h2>
+            <div>
+              <div class="connection-tools">
+                <label for="connectionSearch">Find a connection</label
+                ><button type="button" id="manageConnections">Manage connections</button>
+              </div>
+              <input
+                id="connectionSearch"
+                type="search"
+                placeholder="Search name, model or connector"
+              />
+              <div class="connection-table">
+                <div class="connection-head" aria-hidden="true">
+                  <span>Name / account</span><span>Model</span><span>Connector / status</span>
+                </div>
+                <fieldset id="connections">
+                  <legend class="sr-only">Choose one model connection</legend>
+                </fieldset>
+              </div>
+              <p class="hint" id="connectionHint">
+                Choose a connection. Selecting it does not make a model call.
+              </p>
+              <details>
+                <summary>Local and open-source models</summary>
+                <p class="hint">
+                  Bundled models and installers: In progress. No Ollama dependency or automatic
+                  download. An existing llama.cpp-compatible local server can be connected now using
+                  its /v1 endpoint and exact model ID.
+                </p>
+                <p class="hint">
+                  Local load controls and hardware measurements are not available in this version.
+                </p>
+              </details>
+            </div>
+          </section>
+
+          <section class="form-row" aria-labelledby="outputTitle">
+            <h2 id="outputTitle">Save findings</h2>
+            <div>
+              <label for="outputDirectory">Folder on your computer or mounted drive</label>
+              <input id="outputDirectory" type="text" spellcheck="false" autocomplete="off" />
+              <div class="actions">
+                <button type="button" id="chooseFolder" hidden>Choose folder…</button>
+                <button type="button" id="saveFolder">Use folder</button>
+                <button type="button" id="revealData" hidden>Show folder</button>
+              </div>
+              <p class="hint">
+                Markdown and JSON update automatically after each response. Folder changes apply to
+                new runs; saved runs keep their original location.
+              </p>
+              <p id="outputStatus" role="status" class="hint"></p>
+              <p id="outputError" role="alert" class="error"></p>
+            </div>
+          </section>
+
+          <section class="form-row">
+            <h2>Run budget</h2>
+            <div>
+              <div class="actions presets" aria-label="Run presets">
+                <button type="button" data-preset="quick">Quick</button
+                ><button type="button" data-preset="hour">1 hour</button
+                ><button type="button" data-preset="day">24 hours</button>
+              </div>
+              <div class="budget-grid">
+                <div>
+                  <label for="mode">Search mode</label
+                  ><select id="mode">
+                    <option value="single">One analysis per target</option>
+                    <option value="timed">Timed exploration</option>
+                    <option value="finite">Finite methods / no progress</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="hours">Maximum hours</label
+                  ><input
+                    id="hours"
+                    type="number"
+                    min="0.001"
+                    max="24"
+                    step="any"
+                    value="0.25"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="tokens">Total tokens</label
+                  ><input
+                    id="tokens"
+                    type="number"
+                    min="128"
+                    max="10000000"
+                    value="20000"
+                    required
+                  />
+                </div>
+                <div>
+                  <label for="tpm">Tokens per minute</label
+                  ><input id="tpm" type="number" min="128" max="1000000" value="10000" required />
+                </div>
+              </div>
+              <div id="finiteFields" class="budget-grid" hidden>
+                <div>
+                  <label for="idleMinutes">No new checked route, minutes</label
+                  ><input
+                    id="idleMinutes"
+                    type="number"
+                    min="0.02"
+                    max="1440"
+                    step="any"
+                    value="5"
+                  />
+                </div>
+                <div>
+                  <label for="idleTokens">Or tokens without a new route</label
+                  ><input id="idleTokens" type="number" min="128" max="10000000" value="5000" />
+                </div>
+              </div>
+              <p class="hint" id="finiteHint" hidden>
+                Stops after productive search time or reported tokens without a new route passing
+                configured graph checks. This does not prove every possible method has been found.
+              </p>
+              <details>
+                <summary>Per-call limits and estimated spending</summary>
+                <div class="budget-grid">
+                  <div>
+                    <label for="outputTokens">Maximum output tokens per API call</label
+                    ><input id="outputTokens" type="number" min="64" max="32768" value="2000" />
+                  </div>
+                  <div>
+                    <label for="maxCalls">Maximum calls, whole run</label
+                    ><input id="maxCalls" type="number" min="1" max="200" value="12" />
+                  </div>
+                </div>
+                <div id="apiBudget" hidden>
+                  <div class="budget-grid">
+                    <div>
+                      <label for="usdLimit">Estimated USD budget, 0 = off</label
+                      ><input
+                        id="usdLimit"
+                        type="number"
+                        min="0"
+                        max="10000"
+                        step="any"
+                        value="0"
+                      />
+                    </div>
+                    <div>
+                      <label for="inputRate">Input USD / million tokens</label
+                      ><input
+                        id="inputRate"
+                        type="number"
+                        min="0"
+                        max="1000"
+                        step="any"
+                        value="0"
+                      />
+                    </div>
+                    <div>
+                      <label for="outputRate">Output USD / million tokens</label
+                      ><input
+                        id="outputRate"
+                        type="number"
+                        min="0"
+                        max="1000"
+                        step="any"
+                        value="0"
+                      />
+                    </div>
+                  </div>
+                  <p class="hint">
+                    Enter current provider rates. The worker reserves each call before generation.
+                    Spending is a conservative estimate, not an invoice guarantee.
+                  </p>
+                </div>
+              </details>
+              <p class="hint" id="budgetCaveat">
+                CLI usage is reported after a call. Limits stop subsequent calls; one in-flight call
+                may exceed a token limit or continue billing after cancellation. API output limits
+                do not constrain CLI output.
+              </p>
+              <div class="actions run-actions">
+                <button id="start" type="submit" disabled>Start operation</button
+                ><button id="pause" type="button" disabled>Pause</button
+                ><button id="stop" type="button" disabled>Stop</button>
+              </div>
+              <p id="error" class="error" role="alert"></p>
+            </div>
+          </section>
+        </form>
+
+        <section class="form-row status-section" aria-labelledby="statusTitle">
+          <h2 id="statusTitle">Status</h2>
+          <div>
+            <p id="status" role="status" aria-live="polite">Ready. No run started.</p>
+            <p class="hint" id="metrics">Time and usage appear after a run starts.</p>
+            <details>
+              <summary>Run details</summary>
+              <pre id="runDetails">No run selected.</pre>
+            </details>
+          </div>
+        </section>
+        <section class="form-row" aria-labelledby="resultsTitle">
+          <h2 id="resultsTitle">Results</h2>
+          <div>
+            <div class="history-tools">
+              <label for="history">Saved runs</label
+              ><select id="history">
+                <option value="">No saved runs</option></select
+              ><button id="resume" type="button" disabled>Resume</button>
+            </div>
+            <div class="actions">
+              <button id="exportJson" disabled>Export JSON</button
+              ><button id="exportReport" disabled>Export report</button>
+            </div>
+            <div id="results">
+              <p class="hint">
+                No research yet. Add a target, choose a connection and start an operation.
+              </p>
+            </div>
+          </div>
+        </section>
+        <section class="form-row data-section">
+          <h2>Your research</h2>
+          <div>
+            <p>
+              Nexus makes no ownership claim over your findings. No Nexus account, reporting service
+              or telemetry.
+            </p>
+            <p class="hint">
+              Only your selected AI provider receives prompts when you run research. A local model
+              uses your own server. API keys stay in macOS Keychain.
+            </p>
+            <details>
+              <summary>Local recovery history</summary>
+              <p class="hint">
+                Checkpoints and pathway history stay on this computer. If your chosen drive becomes
+                unavailable, research stops and received work remains here for export.
+              </p>
+              <p class="hint" id="storagePath"></p>
+            </details>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog id="connectionDialog" aria-labelledby="connectionTitle">
+      <div class="dialog-head">
+        <h2 id="connectionTitle">Connections</h2>
+        <button id="closeConnections">Close</button>
+      </div>
+      <p class="hint">
+        Named accounts, never key values. CLI sign-in stays with its own app. API keys are stored in
+        macOS Keychain.
+      </p>
+      <div id="savedConnections"></div>
+      <form id="connectionForm">
+        <label for="connectionKind">Connector</label
+        ><select id="connectionKind">
+          <option value="openai">OpenAI API</option>
+          <option value="anthropic">Anthropic API</option>
+          <option value="codex">Codex CLI</option>
+          <option value="claude">Claude Code CLI</option>
+          <option value="local">Local / OpenAI-compatible API</option>
+        </select>
+        <label for="connectionName">Account or key alias</label
+        ><input
+          id="connectionName"
+          maxlength="80"
+          required
+          placeholder="Research account"
+          autocomplete="off"
+        />
+        <label for="connectionModel">Exact model ID</label
+        ><input
+          id="connectionModel"
+          required
+          placeholder="Enter a model available to your account"
+          spellcheck="false"
+          autocomplete="off"
+        />
+        <div id="keyField">
+          <label for="connectionKey">API key · saved only to Keychain</label
+          ><input id="connectionKey" type="password" autocomplete="off" spellcheck="false" />
+          <p class="hint">
+            Your selected provider receives submitted research. Its account terms and charges apply.
+            Confirm its retention settings before a run.
+          </p>
+        </div>
+        <div id="endpointField" hidden>
+          <label for="connectionEndpoint">Local server URL</label
+          ><input
+            id="connectionEndpoint"
+            placeholder="http://127.0.0.1:8080/v1"
+            spellcheck="false"
+          />
+        </div>
+        <p id="connectorHelp" class="hint"></p>
+        <button type="submit" id="saveConnection">Save connection</button>
+        <p id="connectionError" class="error" role="alert"></p>
+      </form>
+    </dialog>
+    <script type="module" src="/research/app.js"></script>
+  </body>
+</html>

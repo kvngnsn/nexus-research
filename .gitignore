@@ -1,0 +1,52 @@
+# Private local records and credentials
+.local/
+data/
+exports/
+backups/
+secrets/
+.env
+.env.*
+!.env.example
+.pgpass
+.pg_service.conf
+*.key
+*.pem
+*.p12
+*.pfx
+*.log
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+
+# Dependencies, builds and caches
+.venv/
+venv/
+node_modules/
+build/
+dist/
+*.egg-info/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+.cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage/
+
+# Local editor and macOS artifacts
+.DS_Store
+._*
+.idea/
+*.swp
+*.swo
+*~
+
+# Release artifacts stay outside public Git history
+*.dmg
+*.app/

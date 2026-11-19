@@ -1,0 +1,6 @@
+node_modules/
+.local/
+.venv/
+data/
+web/shared/fonts/
+package-lock.json

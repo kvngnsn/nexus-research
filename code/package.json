@@ -1,0 +1,14 @@
+{
+  "name": "nexus-research-dev-tools",
+  "private": true,
+  "description": "Development formatting only; no Node runtime dependency.",
+  "scripts": {
+    "format": "prettier --write web package.json .prettierrc.json",
+    "format:check": "prettier --check web package.json .prettierrc.json",
+    "check:js": "node --check web/shared/utils.js && node --check web/research/app.js"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10"
+  },
+  "type": "module"
+}

@@ -1,0 +1,184 @@
+@font-face {
+  font-family: "Source Code Pro";
+  src: url("/shared/fonts/SourceCodePro-Regular.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  src: url("/shared/fonts/SourceCodePro-Semibold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --paper: #fff;
+  --ink: #000;
+  --muted: #555;
+  --line: #d6d6d6;
+  --pale: #f7f7f7;
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font:
+    13px/1.65 "Source Code Pro",
+    monospace;
+  font-variant-numeric: tabular-nums;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+a {
+  color: inherit;
+  text-underline-offset: 3px;
+}
+button,
+a,
+summary {
+  touch-action: manipulation;
+}
+button {
+  cursor: pointer;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--paper);
+  padding: 8px 12px;
+  font-weight: 400;
+}
+button:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+button:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  min-height: 72px;
+  padding: 18px 28px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.brand {
+  font-size: 16px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+h1,
+h2,
+h3,
+h4,
+p {
+  margin-top: 0;
+}
+h1,
+h2 {
+  font-size: 21px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.5px;
+}
+h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
+h4 {
+  font-size: 12px;
+  font-weight: 600;
+}
+b,
+strong {
+  font-weight: 600;
+}
+p {
+  max-width: 76ch;
+}
+label {
+  display: block;
+  margin: 15px 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+input,
+select,
+textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 10px;
+  border: 1px solid #999;
+  border-radius: 0;
+  background: var(--paper);
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 1px solid var(--ink);
+  outline-offset: 0;
+}
+textarea {
+  min-height: 72px;
+  resize: vertical;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+select {
+  font-size: 12px;
+}
+code {
+  font: inherit;
+  overflow-wrap: anywhere;
+}
+.muted,
+.hint {
+  color: var(--muted);
+}
+.hint {
+  font-size: 11px;
+  line-height: 1.65;
+  margin: 7px 0 12px;
+}
+details {
+  border-top: 1px solid var(--line);
+  margin-top: 20px;
+  padding-top: 13px;
+}
+summary {
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.error {
+  font-size: 12px;
+  margin: 12px 0;
+  font-weight: 600;
+}
+.error:empty {
+  display: none;
+}
+.error:not(:empty)::before {
+  content: "Error: ";
+}
