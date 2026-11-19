@@ -6,7 +6,7 @@ Open-source molecular synthesis research for macOS. Bring your own AI connection
 
 ## Get started
 
-1. Download **Install Nexus.dmg** from [Releases](https://github.com/kvngnsn/nexus-research/releases/latest), open it, and drag **Nexus Research** into Applications.
+1. Download **Install.Nexus.dmg** from [Releases](https://github.com/kvngnsn/nexus-research/releases/latest), open it, and drag **Nexus Research** into Applications.
 2. Choose a findings folder on your computer or mounted drive.
 3. Connect your own API key, signed-in CLI, or local model server.
 4. Add a target structure, set a budget, and start research.

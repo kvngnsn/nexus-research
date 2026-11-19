@@ -10,7 +10,7 @@ Update this file after each task with completed work, validation and remaining w
 - [x] Automatically save JSON and Markdown to a user-selected directory; preserve local recovery history.
 - [x] Add MIT licensing and public documentation without private collaborator information.
 - [x] Complete isolated tests, packaged verification and privacy review.
-- [ ] Publish clean public source history and a rebuilt Mac installer.
+- [x] Publish clean public source history and a rebuilt Mac installer.
 
 ## Future work
 
@@ -21,4 +21,4 @@ Update this file after each task with completed work, validation and remaining w
 
 **Validation:** 50 synthetic tests pass, plus lint, formatting and JavaScript checks. The packaged app and read-only installer pass isolated local-model checks. Native UI QA verifies folder selection, CLI discovery and completed findings. Secret scanning found no leaks; the source and 1,191 bundled Python modules passed private-marker checks. No paid model calls were made.
 
-**Release status:** Public source and version 0.4.0 installer prepared for publication. Developer ID signing and notarization remain open.
+**Release status:** [Public repository](https://github.com/kvngnsn/nexus-research) and [version 0.4.0 installer](https://github.com/kvngnsn/nexus-research/releases/tag/v0.4.0) published with a verified SHA-256 digest. GitHub checks use the supported macOS 15 runner. Developer ID signing and notarization remain open.
